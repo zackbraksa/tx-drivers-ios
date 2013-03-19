@@ -8,7 +8,6 @@
 
 #import "BRKHomeViewController.h"
 #import "BRKAppDelegate.h"
-#import "FMDatabase.h"
 @interface BRKHomeViewController ()
 
 @end
@@ -24,37 +23,6 @@
         
         BRKAppDelegate *appDelegate = (BRKAppDelegate *)[[UIApplication sharedApplication ] delegate];
         [appDelegate makeAvailable];
-        
-        
-        
-
-        
-        
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *documentsDirectory = [paths objectAtIndex:0];
-        NSString *dbPath = [documentsDirectory stringByAppendingPathComponent:@"db.sqlite"];
-        
-        FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
-        
-        db.logsErrors = YES;
-
-        
-        if([db open]){
-            NSLog(@"Opened");
-        }else{
-            NSLog(@"Not Opened");  
-        }
-        
-        
-        FMResultSet *s = [db executeQuery:@"select * from reservations"];
-        if ([db hadError]) {
-            NSLog(@"DB Error %d: %@", [db lastErrorCode], [db lastErrorMessage]); }
-        while ([s next]) {
-            NSLog(@"Sqlite %@",[s resultDictionary]);
-        }
-        
-        
-
         
         /* change tab item title */
         UITabBarItem* tbi = [self tabBarItem];
@@ -89,7 +57,10 @@
     BRKAppDelegate *appDelegate = (BRKAppDelegate *)[[UIApplication sharedApplication ] delegate];
     [appDelegate makeBusy];
     [self.availableButton setEnabled:YES];
-    [sender setEnabled:NO];
+    if([appDelegate getBusyStatus])
+    {
+        [sender setEnabled:NO];
+    }
     
 }
 
@@ -97,7 +68,7 @@
     BRKAppDelegate *appDelegate = (BRKAppDelegate *)[[UIApplication sharedApplication ] delegate];
     [appDelegate makeAvailable];
     [self.busyButton setEnabled:YES];
-    [sender setEnabled:NO];
+    
 
 
 }

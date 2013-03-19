@@ -18,6 +18,8 @@
     float old_lat;
     float old_long;
     BOOL busy;
+    int pendingAlertView;
+    int pendingNotifications;
 }
 
 @property (strong, nonatomic) UIWindow *window;
