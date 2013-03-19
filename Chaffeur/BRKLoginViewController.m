@@ -63,7 +63,7 @@
     self.receivedData = data;
     
     //initialize url that is going to be fetched.
-    NSURL *url = [NSURL URLWithString:@"http://test.braksa.com/tx/index.php/api/chaffeurs/connecter/format/json"];
+    NSURL *url = [NSURL URLWithString:@"http://localhost:8888/tx/index.php/api/chaffeurs/connecter/format/json"];
     
     //initialize a request from url
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[url standardizedURL]];

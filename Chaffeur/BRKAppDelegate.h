@@ -20,6 +20,8 @@
     BOOL busy;
     int pendingAlertView;
     int pendingNotifications;
+    UIActivityIndicatorView *activityIndicator;
+
 }
 
 @property (strong, nonatomic) UIWindow *window;

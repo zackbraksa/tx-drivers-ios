@@ -12,6 +12,8 @@
 #import "BRKHomeViewController.h"
 #import "FMDatabase.h"
 #import "FMDatabaseAdditions.h"
+#import <QuartzCore/QuartzCore.h>
+
 
 @implementation BRKAppDelegate
 
@@ -85,38 +87,47 @@
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     NSLog(@"Enter Foreground");
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *dbPath = [documentsDirectory stringByAppendingPathComponent:@"db.sqlite"];
-    FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
     
-    db.logsErrors = YES;
-    
-    if([db open]){
-        NSLog(@"Opened");
-        NSLog(@"Alert View In Forground");
-    }else{
-        NSLog(@"Not Opened");
-    }
-    
-    FMResultSet *s = [db executeQuery:@"select * from reservations WHERE status != 'ignored'"];
-    
-    if ([db hadError]) {
-        NSLog(@"DB Error %d: %@", [db lastErrorCode], [db lastErrorMessage]);
-    }
-    
-    while ([s next] && pendingAlertView == 0) {
-        NSString* depart = [[NSString alloc] initWithFormat:@"Client à %@", [s stringForColumn:@"depart"] ];
-        NSString* title = [[NSString alloc] initWithFormat:@"Course en attente #%d", [s intForColumn:@"id"]];
+    if(!busy){
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectory = [paths objectAtIndex:0];
+        NSString *dbPath = [documentsDirectory stringByAppendingPathComponent:@"db.sqlite"];
+        FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
         
-        UIAlertView *message = [[UIAlertView alloc] initWithTitle:title
-                                                          message:depart
-                                                         delegate:self
-                                                cancelButtonTitle:@"Accepter"
-                                                otherButtonTitles:@"Ignorer", nil];
-        [message show];
-        pendingAlertView++;
+        db.logsErrors = YES;
+        
+        if([db open]){
+            NSLog(@"Opened");
+            NSLog(@"Alert View In Forground");
+        }else{
+            NSLog(@"Not Opened");
+        }
+        
+        FMResultSet *s = [db executeQuery:@"select * from reservations WHERE status != 'ignored'"];
+        
+        if ([db hadError]) {
+            NSLog(@"DB Error %d: %@", [db lastErrorCode], [db lastErrorMessage]);
+        }
+        
+        while ([s next] && pendingAlertView == 0) {
+            NSString* depart = [[NSString alloc] initWithFormat:@"Client à %@", [s stringForColumn:@"depart"] ];
+            NSString* title = [[NSString alloc] initWithFormat:@"Course en attente #%d", [s intForColumn:@"id"]];
+            
+            UIAlertView *message = [[UIAlertView alloc] initWithTitle:title
+                                                              message:depart
+                                                             delegate:self
+                                                    cancelButtonTitle:@"Accepter"
+                                                    otherButtonTitles:@"Ignorer", nil];
+            [message show];
+            pendingAlertView++;
+        }
+        
+        if(pendingAlertView){
+            busy = true;
+        }
+        
     }
+
 
     
     [locationManager stopMonitoringSignificantLocationChanges];
@@ -125,22 +136,66 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     
+    NSRange range;
+    range = [[alertView title] rangeOfString:@"#"];
+    int *len = [[alertView title] length];
+    len--;
+    NSRange searchRange = NSMakeRange(range.location + 1, (alertView.title.length - range.location - 1));
+    NSString* someString = [[alertView title] substringWithRange:searchRange];
+    
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     if([title isEqualToString:@"Accepter"])
     {
+        NSLog(@"Accepting Reservation");
+        NSMutableData *data = [[NSMutableData alloc] init];
+        self.receivedData = data;
         
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString *user_id = [defaults objectForKey:@"user_id"];
+        
+        //initialize new mutable data
+        self.receivedData = data;
+        
+        //initialize url that is going to be fetched.
+        NSURL *url = [NSURL URLWithString:@"http://localhost:8888/tx/index.php/api/chaffeurs/acceptReservation/format/json"];
+        
+        //initialize a request from url
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[url standardizedURL]];
+        
+        //set http method
+        [request setHTTPMethod:@"POST"];
+        //initialize a post data
+        NSString *postData = [[NSString alloc] initWithFormat:@"idReservation=%@&idChauffeur=%@", someString, user_id];
+        
+        NSLog(@"idReservation: %@, idChauffeur: %@", someString, user_id);
+        
+        //set request content type we MUST set this value.
+        
+        [request setValue:@"application/x-www-form-urlencoded; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+        
+        //set post data of request
+        [request setHTTPBody:[postData dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        //initialize a connection from request
+        NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+        self.connection = connection;
+        
+        //start the connection
+        [connection start];
+        
+        activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        activityIndicator.layer.backgroundColor = [[UIColor colorWithWhite:0.0f alpha:0.5f] CGColor];
+        activityIndicator.hidesWhenStopped = YES;
+        activityIndicator.frame = self.window.bounds;
+        [self.window addSubview:activityIndicator];
+        [activityIndicator startAnimating];
     }
     else if([title isEqualToString:@"Ignorer"])
     {
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults removeObjectForKey:@"pending_reservation"];
         pendingAlertView--;
-        NSRange range;
-        range = [[alertView title] rangeOfString:@"#"];
-        int *len = [[alertView title] length];
-        len--;
-        NSRange searchRange = NSMakeRange(range.location + 1, (alertView.title.length - range.location - 1));
-        NSString* someString = [[alertView title] substringWithRange:searchRange];
+        
         
         
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -211,7 +266,7 @@
         self.receivedData = data;
         
         //initialize url that is going to be fetched.
-        NSURL *url = [NSURL URLWithString:@"http://test.braksa.com/tx/index.php/api/chaffeurs/position/format/json"];
+        NSURL *url = [NSURL URLWithString:@"http://localhost:8888/tx/index.php/api/chaffeurs/position/format/json"];
         
         //initialize a request from url
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[url standardizedURL]];
@@ -259,7 +314,7 @@
                           options:kNilOptions
                           error:nil];
     
-    NSLog(@"Data sent %d", i);
+    NSLog(@"DATE SENT");
     
     //si la reponse est de type updatePosition (+ Recevoir les reservations en cours).
     if(json && [[json objectForKey:@"action"] isEqualToString:@"updatePosition"]){
@@ -271,22 +326,24 @@
             NSString *documentsDirectory = [paths objectAtIndex:0];
             NSString *dbPath = [documentsDirectory stringByAppendingPathComponent:@"db.sqlite"];
             FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
-            
+            NSLog(@"%@",dbPath);
             db.logsErrors = YES;
             
             if([db open]){
-                NSLog(@"Opened");
+                NSLog(@"DB Opened in updatePosition");
             }else{
-                NSLog(@"Not Opened");
+                NSLog(@"DB Not Opened in updatePosition");
             }
             
             NSArray* reservations = [json objectForKey:@"reservation"];
             for(int j = 0; j < [reservations count]; j++){
+                NSLog(@"Adding Reservation %d to DB.", j);
                 NSDictionary* uneReservation = [reservations objectAtIndex:j];
-                NSString* query = [[NSString alloc] initWithFormat:@"select count(id) from reservations WHERE id = %@",[uneReservation objectForKey:@"id"]];
+                NSString* query = [[NSString alloc] initWithFormat:@"select count(id) from reservations WHERE id = (%d)",[[uneReservation objectForKey:@"id"] intValue]];
                 NSUInteger count = [db intForQuery:query];
                 
                 if(count == 0){
+                    NSLog(@"Inserting");
                     [db executeUpdate:@"INSERT INTO reservations(id,latitude, longitude,status,date, depart) VALUES (?, ?, ?, ?, ?, ?)",[uneReservation objectForKey:@"id"],[uneReservation objectForKey:@"latitude"],[uneReservation objectForKey:@"longitude"],[uneReservation objectForKey:@"status"],[uneReservation objectForKey:@"date"], [uneReservation objectForKey:@"adresse"]];
                 }
             }
@@ -311,17 +368,16 @@
                 
                 Class cls = NSClassFromString(@"UILocalNotification");
                 if (cls != nil && nbrReservations != 0) {
+                    NSLog(@"Sending Notification to iOS");
                     [self.connection cancel];
                     busy = true;
                     pendingNotifications++;
                     UILocalNotification *notif = [[cls alloc] init];
                     notif.timeZone = [NSTimeZone defaultTimeZone];
-                    
                     notif.alertBody = notifTitle;
                     notif.alertAction = @"Afficher";
                     notif.soundName = UILocalNotificationDefaultSoundName;
                     notif.applicationIconBadgeNumber = 1;
-                    
                     [[UIApplication sharedApplication] presentLocalNotificationNow:notif];
                 }
                 
@@ -336,7 +392,6 @@
                 
                 while ([s next] && pendingAlertView == 0) {
                     busy = true;
-
                     NSString* depart = [[NSString alloc] initWithFormat:@"Client à %@", [s stringForColumn:@"depart"] ];
                     NSString* title = [[NSString alloc] initWithFormat:@"Course en attente #%d", [s intForColumn:@"id"]];
                     
@@ -349,6 +404,7 @@
                     pendingAlertView++;
                     NSLog(@"Alert View In Download");
                 }
+                NSLog(@"Showing AlertView2 done. with %d", pendingAlertView);
             }
         
             if(pendingAlertView == 0 && pendingNotifications == 0){
@@ -365,8 +421,41 @@
         
     }
     //si la reponse est de type accepterReservation. 
-    else if([[json objectForKey:@"action"] isEqualToString:@"acceptReservation"]){
-        NSLog(@"Reservation Accepted");
+    else if([[json objectForKey:@"action"] isEqualToString:@"confirmationReservation"]){
+        if([[json objectForKey:@"status"] isEqualToString:@"accepted"]){
+            
+            NSLog(@"json/confirmerReservation: %@",json);
+            
+            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+            NSString *documentsDirectory = [paths objectAtIndex:0];
+            NSString *dbPath = [documentsDirectory stringByAppendingPathComponent:@"db.sqlite"];
+            FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
+            
+            db.logsErrors = YES;
+            
+            if([db open]){
+                NSLog(@"DB Opened in confirmer Reservation");
+            }else{
+                NSLog(@"DB Not Opened confirmer Reservation");
+            }
+            
+            [db executeUpdateWithFormat:@"UPDATE reservations SET status = 'accepted' WHERE id = (%d)", [[json objectForKey:@"id"] intValue]];
+            
+            [activityIndicator stopAnimating];
+            
+            FMResultSet *s = [db executeQueryWithFormat:@"select * from reservations WHERE id = (%@)", [json objectForKey:@"id"]];
+            if([s next]){
+                if ([self.viewController respondsToSelector:@selector(selectedViewController)]) {
+                    BRKHomeViewController* homeView = (BRKHomeViewController*)((UITabBarController*)self.viewController).selectedViewController;
+                    if([homeView respondsToSelector:@selector(debugField)]){
+                        homeView.debugField.text =  [[NSString alloc] initWithFormat:@"Adresse départ de votre client: %@",[s stringForColumn:@"depart"]];
+                    }
+                }
+            }
+
+        }else{
+            
+        }
     }
     
     
