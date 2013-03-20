@@ -10,6 +10,7 @@
 #import "BRKSignupViewController.h"
 #import "BRKTabBarViewController.h"
 #import "BRKAppDelegate.h"
+#import "BRKHomeViewController.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface BRKLoginViewController ()
@@ -64,7 +65,7 @@
     self.receivedData = data;
     
     //initialize url that is going to be fetched.
-    NSURL *url = [NSURL URLWithString:@"http://localhost:8888/tx/index.php/api/chaffeurs/connecter/format/json"];
+    NSURL *url = [NSURL URLWithString:@"http://test.braksa.com/tx/index.php/api/chaffeurs/connecter/format/json"];
     
     //initialize a request from url
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[url standardizedURL]];
@@ -152,12 +153,16 @@
         [defaults setObject:[json objectForKey:@"user_id"] forKey:@"user_id"];
         
         
-        BRKTabBarViewController *homeView = [[BRKTabBarViewController alloc] initWithNibName:@"BRKTabBarViewController" bundle:nil];
-        UIWindow *window = [[UIApplication sharedApplication] keyWindow];
-        window.rootViewController = homeView;
+        BRKTabBarViewController *tabBarView = [[BRKTabBarViewController alloc] initWithNibName:@"BRKTabBarViewController" bundle:nil];
+        
         
         BRKAppDelegate *appDelegate = (BRKAppDelegate *)[[UIApplication sharedApplication ] delegate];
         [appDelegate makeAvailable];
+        
+        appDelegate.viewController = tabBarView;
+        appDelegate.window.rootViewController = tabBarView;
+        
+        [self.view removeFromSuperview];
         
         
     }else{

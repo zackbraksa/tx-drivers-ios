@@ -140,7 +140,7 @@
     if([title isEqualToString:@"Accepter"] && count == 0)
     {
         self.receivedData = [[NSMutableData alloc] init];
-        NSURL *url = [NSURL URLWithString:@"http://localhost:8888/tx/index.php/api/chaffeurs/acceptReservation/format/json"];
+        NSURL *url = [NSURL URLWithString:@"http://test.braksa.com/tx/index.php/api/chaffeurs/acceptReservation/format/json"];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[url standardizedURL]];
         [request setHTTPMethod:@"POST"];
         NSString *postData = [[NSString alloc] initWithFormat:@"idReservation=%@&idChauffeur=%@", reservation_id, [self getUserId]];
@@ -197,13 +197,15 @@
         self.receivedData = [[NSMutableData alloc] init];
         if ([self.viewController respondsToSelector:@selector(selectedViewController)]) {
             BRKHomeViewController* homeView = (BRKHomeViewController*)((UITabBarController*)self.viewController).selectedViewController;
-            //if([homeView respondsToSelector:@selector(debugField)]) homeView.debugField.text = [[NSString alloc] initWithFormat:@"sent %d", i];
-            if([homeView respondsToSelector:@selector(debugField)]) homeView.debugField.text = [[NSString alloc] initWithFormat:@"sent %d", i];
+            if([homeView respondsToSelector:@selector(debugField)]){
+                homeView.debugField.text = [[NSString alloc] initWithFormat:@"sent %d", i];
+            }
             i++;
         }
 
-        //POST Req = send new position + get pending reservations from server 
-        NSURL *url = [NSURL URLWithString:@"http://localhost:8888/tx/index.php/api/chaffeurs/position/format/json"];
+
+        //POST Req = send new position + get pending reservations from server
+        NSURL *url = [NSURL URLWithString:@"http://test.braksa.com/tx/index.php/api/chaffeurs/position/format/json"];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[url standardizedURL]];
         [request setHTTPMethod:@"POST"];
         NSString *postData = [[NSString alloc] initWithFormat:@"id=%@&latitude=%f&longitude=%f",[self getUserId], newLocation.coordinate.latitude, newLocation.coordinate.longitude];
@@ -292,6 +294,7 @@
                 [self dbLogErrors];
                 
                 if ([s next]) {
+                    [self.connection cancel];
                     busy = true; //stop receiving pending reservations from server. 
                     NSLog(@"Showing First Pending Reservation in AlertView from DB.");
                     NSString* depart = [[NSString alloc] initWithFormat:@"Client à %@", [s stringForColumn:@"depart"] ];
@@ -340,6 +343,7 @@
 
         }else{
             //afficher AlertView d'erreur + Bouton Continuer
+            NSLog(@"Request refused");
         }
     }else if([[json objectForKey:@"action"] isEqualToString:@"cancelReservation"]){
         if([[json objectForKey:@"status"] isEqualToString:@"done"]){
@@ -349,6 +353,9 @@
         }else{
             NSLog(@"Can't cancel reservation.");
         }
+    }else{
+        NSLog(@"Couldn't handle this request");
+            NSLog(@"%@",json);
     }
 
 }
@@ -361,7 +368,7 @@
         NSString* id = [s stringForColumn:@"id"];
         NSLog(@"Canceling Reservation %@", id);
         self.receivedData = [[NSMutableData alloc] init];
-        NSURL *url = [NSURL URLWithString:@"http://localhost:8888/tx/index.php/api/chaffeurs/cancelReservation/format/json"];
+        NSURL *url = [NSURL URLWithString:@"http://test.braksa.com/tx/index.php/api/chaffeurs/cancelReservation/format/json"];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[url standardizedURL]];
         [request setHTTPMethod:@"POST"];
         NSString *postData = [[NSString alloc] initWithFormat:@"idReservation=%@", id];
