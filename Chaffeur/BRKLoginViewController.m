@@ -9,6 +9,7 @@
 #import "BRKLoginViewController.h"
 #import "BRKSignupViewController.h"
 #import "BRKTabBarViewController.h"
+#import "BRKAppDelegate.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface BRKLoginViewController ()
@@ -142,12 +143,10 @@
                           options:kNilOptions
                           error:nil];
     
-    NSLog(@"json: %@",json);
     
     
     if([[json objectForKey:@"status"] isEqualToString:@"done"])
     {
-        NSLog(@"user_id : %@",[json objectForKey:@"profil"]);
         //[SSKeychain setPassword:[self.passwordField text] forService:@"loginService" account:@"AnyUser"];
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setObject:[json objectForKey:@"user_id"] forKey:@"user_id"];
@@ -156,6 +155,9 @@
         BRKTabBarViewController *homeView = [[BRKTabBarViewController alloc] initWithNibName:@"BRKTabBarViewController" bundle:nil];
         UIWindow *window = [[UIApplication sharedApplication] keyWindow];
         window.rootViewController = homeView;
+        
+        BRKAppDelegate *appDelegate = (BRKAppDelegate *)[[UIApplication sharedApplication ] delegate];
+        [appDelegate makeAvailable];
         
         
     }else{

@@ -53,7 +53,6 @@
     BRKAppDelegate *appDelegate = (BRKAppDelegate *)[[UIApplication sharedApplication ] delegate];
     [appDelegate makeBusy];
     
-    //[SSKeychain deletePasswordForService:@"loginService" account:@"AnyUser"];
     NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
     [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
     

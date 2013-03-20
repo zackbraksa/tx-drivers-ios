@@ -11,12 +11,12 @@
 #import <CoreLocation/CoreLocation.h>
 
 @class BRKViewController;
+@class FMDatabase;
 
 @interface BRKAppDelegate : UIResponder <UIApplicationDelegate,CLLocationManagerDelegate>{
     CLLocationManager *locationManager;
     int i;
-    float old_lat;
-    float old_long;
+    FMDatabase *db;
     BOOL busy;
     int pendingAlertView;
     int pendingNotifications;
@@ -31,9 +31,12 @@
 
 
 - (BOOL) getBusyStatus;
+- (void) cancelCourse;
 - (void) makeBusy;
 - (void) makeAvailable;
-- (void)createEditableCopyOfDatabaseIfNeeded;
+- (void) createEditableCopyOfDatabaseIfNeeded;
+- (NSString*) getUserId;
+- (void) dbLogErrors;
 
 
 @end

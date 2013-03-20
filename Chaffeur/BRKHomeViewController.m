@@ -53,6 +53,11 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (IBAction)cancelCourseAction:(id)sender {
+    BRKAppDelegate *appDelegate = (BRKAppDelegate *)[[UIApplication sharedApplication ] delegate];
+    [appDelegate cancelCourse];
+}
+
 - (IBAction)busyAction:(id)sender {
     BRKAppDelegate *appDelegate = (BRKAppDelegate *)[[UIApplication sharedApplication ] delegate];
     [appDelegate makeBusy];

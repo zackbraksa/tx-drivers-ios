@@ -10,6 +10,7 @@
 
 @interface BRKHomeViewController : UIViewController
 @property (unsafe_unretained, nonatomic) IBOutlet UILabel *debugField;
+- (IBAction)cancelCourseAction:(id)sender;
 - (IBAction)busyAction:(id)sender;
 - (IBAction)availableAction:(id)sender;
 @property (unsafe_unretained, nonatomic) IBOutlet UIButton *busyButton;
