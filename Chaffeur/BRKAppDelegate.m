@@ -1,6 +1,6 @@
 //
 //  BRKAppDelegate.m
-//  Chaffeur
+//  chauffeur
 //
 //  Created by Zakaria on 3/10/13.
 //  Copyright (c) 2013 Zakaria. All rights reserved.
@@ -26,6 +26,7 @@
     pendingAlertView = 0;
     pendingNotifications = 0;
     
+    NSLog(@"USER ID: %@",[self getUserId]);
     
     if([self getUserId] == NULL){
          BRKLoginViewController *firstView = [[BRKLoginViewController alloc] initWithNibName:@"BRKLoginViewController" bundle:nil];
@@ -35,6 +36,10 @@
     }else{
         self.viewController = [[BRKTabBarViewController alloc] initWithNibName:@"BRKHomeViewController" bundle:nil];
     }
+    
+    //init badge number
+    UIApplication* app = [UIApplication sharedApplication];
+    app.applicationIconBadgeNumber = 0;
     
     //init db
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -140,7 +145,7 @@
     if([title isEqualToString:@"Accepter"] && count == 0)
     {
         self.receivedData = [[NSMutableData alloc] init];
-        NSURL *url = [NSURL URLWithString:@"http://test.braksa.com/tx/index.php/api/chaffeurs/acceptReservation/format/json"];
+        NSURL *url = [NSURL URLWithString:@"http://test.braksa.com/tx/index.php/api/chauffeurs/acceptReservation/format/json"];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[url standardizedURL]];
         [request setHTTPMethod:@"POST"];
         NSString *postData = [[NSString alloc] initWithFormat:@"idReservation=%@&idChauffeur=%@", reservation_id, [self getUserId]];
@@ -176,6 +181,8 @@
         }else{
             pendingNotifications = 0;
             pendingAlertView = 0;
+            UIApplication* app = [UIApplication sharedApplication];
+            app.applicationIconBadgeNumber = 0;
             busy = false;
             NSLog(@"No more AlertViews to show. ");
         }
@@ -194,6 +201,7 @@
 
     if([self getUserId] && !busy ){ //if user is logged in + not busy. 
         
+        NSLog(@"Updating Position.");
         self.receivedData = [[NSMutableData alloc] init];
         if ([self.viewController respondsToSelector:@selector(selectedViewController)]) {
             BRKHomeViewController* homeView = (BRKHomeViewController*)((UITabBarController*)self.viewController).selectedViewController;
@@ -205,7 +213,7 @@
 
 
         //POST Req = send new position + get pending reservations from server
-        NSURL *url = [NSURL URLWithString:@"http://test.braksa.com/tx/index.php/api/chaffeurs/position/format/json"];
+        NSURL *url = [NSURL URLWithString:@"http://test.braksa.com/tx/index.php/api/chauffeurs/position/format/json"];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[url standardizedURL]];
         [request setHTTPMethod:@"POST"];
         NSString *postData = [[NSString alloc] initWithFormat:@"id=%@&latitude=%f&longitude=%f",[self getUserId], newLocation.coordinate.latitude, newLocation.coordinate.longitude];
@@ -344,6 +352,13 @@
         }else{
             //afficher AlertView d'erreur + Bouton Continuer
             NSLog(@"Request refused");
+            [activityIndicator stopAnimating];
+            UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Requete refusée."
+                                                              message:@"Votre requete à était refusé par notre serveur."
+                                                             delegate:self
+                                                    cancelButtonTitle:@"Continuer"
+                                                    otherButtonTitles:@"Ignorer", nil];
+            [message show];
         }
     }else if([[json objectForKey:@"action"] isEqualToString:@"cancelReservation"]){
         if([[json objectForKey:@"status"] isEqualToString:@"done"]){
@@ -368,7 +383,7 @@
         NSString* id = [s stringForColumn:@"id"];
         NSLog(@"Canceling Reservation %@", id);
         self.receivedData = [[NSMutableData alloc] init];
-        NSURL *url = [NSURL URLWithString:@"http://test.braksa.com/tx/index.php/api/chaffeurs/cancelReservation/format/json"];
+        NSURL *url = [NSURL URLWithString:@"http://test.braksa.com/tx/index.php/api/chauffeurs/cancelReservation/format/json"];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[url standardizedURL]];
         [request setHTTPMethod:@"POST"];
         NSString *postData = [[NSString alloc] initWithFormat:@"idReservation=%@", id];

@@ -1,5 +1,5 @@
 //
-// Prefix header for all source files of the 'Chaffeur' target in the 'Chaffeur' project
+// Prefix header for all source files of the 'chauffeur' target in the 'chauffeur' project
 //
 
 #import <Availability.h>

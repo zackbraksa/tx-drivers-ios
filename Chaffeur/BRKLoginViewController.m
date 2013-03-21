@@ -1,6 +1,6 @@
 //
 //  BRKLoginViewController.m
-//  Chaffeur
+//  chauffeur
 //
 //  Created by Zakaria on 3/16/13.
 //  Copyright (c) 2013 Zakaria. All rights reserved.
@@ -65,7 +65,7 @@
     self.receivedData = data;
     
     //initialize url that is going to be fetched.
-    NSURL *url = [NSURL URLWithString:@"http://test.braksa.com/tx/index.php/api/chaffeurs/connecter/format/json"];
+    NSURL *url = [NSURL URLWithString:@"http://test.braksa.com/tx/index.php/api/chauffeurs/connecter/format/json"];
     
     //initialize a request from url
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[url standardizedURL]];
@@ -166,8 +166,10 @@
         
         
     }else{
-        UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Erreur authentification!"
-                                                          message:@"Mauvaise combinaison Login/Mot de Passe."
+        NSString* str = [[NSString alloc] initWithFormat:@"Mauvaise combinaison Login/Mot de Passe. %@ %@",[json objectForKey:@"email"], [json objectForKey:@"pwd"]];
+        
+        UIAlertView *message = [[UIAlertView alloc] initWithTitle:[json objectForKey:@"status"]
+                                                          message:str
                                                          delegate:nil
                                                 cancelButtonTitle:@"Réessayez"
                                                 otherButtonTitles:nil];
