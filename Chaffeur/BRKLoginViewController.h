@@ -17,8 +17,8 @@
 @property (retain, nonatomic) NSURLConnection *connection;
 @property (retain, nonatomic) NSMutableData *receivedData;
 
-- (IBAction)connexionAction:(id)sender;
 - (IBAction)creerCompteAction:(id)sender;
+- (IBAction)connexionAction:(id)sender;
 - (IBAction)textFieldDoneEditing:(id)sender;
 - (IBAction)backgroundTap:(id)sender;
 

@@ -9,11 +9,15 @@
 #import <UIKit/UIKit.h>
 
 @interface BRKHomeViewController : UIViewController
-@property (unsafe_unretained, nonatomic) IBOutlet UILabel *debugField;
+
 - (IBAction)cancelCourseAction:(id)sender;
 - (IBAction)busyAction:(id)sender;
 - (IBAction)availableAction:(id)sender;
+
 @property (unsafe_unretained, nonatomic) IBOutlet UIButton *busyButton;
 @property (unsafe_unretained, nonatomic) IBOutlet UIButton *availableButton;
+@property (unsafe_unretained, nonatomic) IBOutlet UILabel *statusLabel;
+@property (unsafe_unretained, nonatomic) IBOutlet UILabel *titleLabel;
+@property (unsafe_unretained, nonatomic) IBOutlet UILabel *addressLabel;
 
 @end

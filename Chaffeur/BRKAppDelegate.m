@@ -205,8 +205,8 @@
         self.receivedData = [[NSMutableData alloc] init];
         if ([self.viewController respondsToSelector:@selector(selectedViewController)]) {
             BRKHomeViewController* homeView = (BRKHomeViewController*)((UITabBarController*)self.viewController).selectedViewController;
-            if([homeView respondsToSelector:@selector(debugField)]){
-                homeView.debugField.text = [[NSString alloc] initWithFormat:@"sent %d", i];
+            if([homeView respondsToSelector:@selector(addressLabel)]){
+                homeView.addressLabel.text = [[NSString alloc] initWithFormat:@"%d", i];
             }
             i++;
         }
@@ -340,8 +340,9 @@
             if([s next]){
                 if ([self.viewController respondsToSelector:@selector(selectedViewController)]) {
                     BRKHomeViewController* homeView = (BRKHomeViewController*)((UITabBarController*)self.viewController).selectedViewController;
-                    if([homeView respondsToSelector:@selector(debugField)]){
-                        homeView.debugField.text =  [[NSString alloc] initWithFormat:@"%@",[s stringForColumn:@"depart"]];
+                    if([homeView respondsToSelector:@selector(addressLabel)]){
+                        homeView.titleLabel.text = @"Adresse du client";
+                        homeView.addressLabel.text =  [[NSString alloc] initWithFormat:@"%@",[s stringForColumn:@"depart"]];
                     }
                 }
             }

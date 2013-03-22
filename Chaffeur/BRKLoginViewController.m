@@ -99,9 +99,10 @@
 }
 
 - (IBAction)creerCompteAction:(id)sender {
-    BRKSignupViewController *SigninView = [[BRKSignupViewController alloc] initWithNibName:@"BIDSigninViewController" bundle:nil];
-    
-    [[self navigationController] pushViewController:SigninView animated:YES];
+    BRKSignupViewController *SignupView = [[BRKSignupViewController alloc] initWithNibName:@"BRKSignupViewController" bundle:nil];
+        
+    [SignupView setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
+    [self presentModalViewController:SignupView animated:YES];
 }
 
 - (IBAction)textFieldDoneEditing:(id)sender {

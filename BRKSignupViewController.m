@@ -1,8 +1,8 @@
 //
 //  BRKSignupViewController.m
-//  chauffeur
+//  Chaffeur
 //
-//  Created by Zakaria on 3/16/13.
+//  Created by Zakaria on 3/21/13.
 //  Copyright (c) 2013 Zakaria. All rights reserved.
 //
 
@@ -18,7 +18,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        
     }
     return self;
 }
@@ -35,4 +35,11 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)viewDidUnload {
+    [self setNavigationBar:nil];
+    [super viewDidUnload];
+}
+- (IBAction)cancelAction:(id)sender {
+    [self dismissModalViewControllerAnimated:YES];
+}
 @end

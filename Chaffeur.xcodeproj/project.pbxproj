@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		922773F716F52AD400B52408 /* BRKLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 922773F516F52AD400B52408 /* BRKLoginViewController.m */; };
 		922773F816F52AD400B52408 /* BRKLoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 922773F616F52AD400B52408 /* BRKLoginViewController.xib */; };
-		922773FC16F52F5400B52408 /* BRKSignupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 922773FA16F52F5400B52408 /* BRKSignupViewController.m */; };
-		922773FD16F52F5400B52408 /* BRKSignupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 922773FB16F52F5400B52408 /* BRKSignupViewController.xib */; };
 		9227740616F531A400B52408 /* BRKParametresViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9227740416F531A300B52408 /* BRKParametresViewController.m */; };
 		9227740716F531A400B52408 /* BRKParametresViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9227740516F531A300B52408 /* BRKParametresViewController.xib */; };
 		9227740A16F531E900B52408 /* BRKTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9227740916F531E900B52408 /* BRKTabBarViewController.m */; };
@@ -33,6 +31,8 @@
 		92789D9D16ED2D1100F069CD /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92789D9C16ED2D1100F069CD /* Default-568h@2x.png */; };
 		92789DB416ED42AD00F069CD /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92789DB316ED42AD00F069CD /* CoreLocation.framework */; };
 		92789DB616ED42B200F069CD /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92789DB516ED42B200F069CD /* MapKit.framework */; };
+		92849C6F16FA911300E97233 /* BRKSignupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92849C6D16FA911300E97233 /* BRKSignupViewController.m */; };
+		92849C7016FA911300E97233 /* BRKSignupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 92849C6E16FA911300E97233 /* BRKSignupViewController.xib */; };
 		928A582A16EFC6CE00484F44 /* greenButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 928A582816EFC6CE00484F44 /* greenButton.png */; };
 		928A582B16EFC6CE00484F44 /* orangeButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 928A582916EFC6CE00484F44 /* orangeButton.png */; };
 		92C2BF8516F959E0008F3754 /* db.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 92C2BF8416F959E0008F3754 /* db.sqlite */; };
@@ -42,9 +42,6 @@
 		922773F416F52AD400B52408 /* BRKLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRKLoginViewController.h; sourceTree = "<group>"; };
 		922773F516F52AD400B52408 /* BRKLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRKLoginViewController.m; sourceTree = "<group>"; };
 		922773F616F52AD400B52408 /* BRKLoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BRKLoginViewController.xib; sourceTree = "<group>"; };
-		922773F916F52F5300B52408 /* BRKSignupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRKSignupViewController.h; sourceTree = "<group>"; };
-		922773FA16F52F5400B52408 /* BRKSignupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRKSignupViewController.m; sourceTree = "<group>"; };
-		922773FB16F52F5400B52408 /* BRKSignupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BRKSignupViewController.xib; sourceTree = "<group>"; };
 		9227740316F531A300B52408 /* BRKParametresViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRKParametresViewController.h; sourceTree = "<group>"; };
 		9227740416F531A300B52408 /* BRKParametresViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRKParametresViewController.m; sourceTree = "<group>"; };
 		9227740516F531A300B52408 /* BRKParametresViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BRKParametresViewController.xib; sourceTree = "<group>"; };
@@ -79,6 +76,9 @@
 		92789D9C16ED2D1100F069CD /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		92789DB316ED42AD00F069CD /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		92789DB516ED42B200F069CD /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		92849C6C16FA911300E97233 /* BRKSignupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BRKSignupViewController.h; path = ../BRKSignupViewController.h; sourceTree = "<group>"; };
+		92849C6D16FA911300E97233 /* BRKSignupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BRKSignupViewController.m; path = ../BRKSignupViewController.m; sourceTree = "<group>"; };
+		92849C6E16FA911300E97233 /* BRKSignupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = BRKSignupViewController.xib; path = ../BRKSignupViewController.xib; sourceTree = "<group>"; };
 		928A582816EFC6CE00484F44 /* greenButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = greenButton.png; sourceTree = "<group>"; };
 		928A582916EFC6CE00484F44 /* orangeButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = orangeButton.png; sourceTree = "<group>"; };
 		92C2BF8416F959E0008F3754 /* db.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = db.sqlite; sourceTree = "<group>"; };
@@ -144,15 +144,15 @@
 				922773F616F52AD400B52408 /* BRKLoginViewController.xib */,
 				9227740816F531E900B52408 /* BRKTabBarViewController.h */,
 				9227740916F531E900B52408 /* BRKTabBarViewController.m */,
+				92849C6C16FA911300E97233 /* BRKSignupViewController.h */,
+				92849C6D16FA911300E97233 /* BRKSignupViewController.m */,
+				92849C6E16FA911300E97233 /* BRKSignupViewController.xib */,
 				9227740B16F5355900B52408 /* BRKHomeViewController.h */,
 				9227740C16F5355900B52408 /* BRKHomeViewController.m */,
 				9227740D16F5355900B52408 /* BRKHomeViewController.xib */,
 				9227740316F531A300B52408 /* BRKParametresViewController.h */,
 				9227740416F531A300B52408 /* BRKParametresViewController.m */,
 				9227740516F531A300B52408 /* BRKParametresViewController.xib */,
-				922773F916F52F5300B52408 /* BRKSignupViewController.h */,
-				922773FA16F52F5400B52408 /* BRKSignupViewController.m */,
-				922773FB16F52F5400B52408 /* BRKSignupViewController.xib */,
 				924C59BC16F69E15000488BF /* FMDatabase.h */,
 				924C59BD16F69E15000488BF /* FMDatabase.m */,
 				924C59BE16F69E15000488BF /* FMDatabaseAdditions.h */,
@@ -241,10 +241,10 @@
 				928A582A16EFC6CE00484F44 /* greenButton.png in Resources */,
 				928A582B16EFC6CE00484F44 /* orangeButton.png in Resources */,
 				922773F816F52AD400B52408 /* BRKLoginViewController.xib in Resources */,
-				922773FD16F52F5400B52408 /* BRKSignupViewController.xib in Resources */,
 				9227740716F531A400B52408 /* BRKParametresViewController.xib in Resources */,
 				9227740F16F5355900B52408 /* BRKHomeViewController.xib in Resources */,
 				92C2BF8516F959E0008F3754 /* db.sqlite in Resources */,
+				92849C7016FA911300E97233 /* BRKSignupViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -258,7 +258,6 @@
 				92789D9316ED2D1100F069CD /* main.m in Sources */,
 				92789D9716ED2D1100F069CD /* BRKAppDelegate.m in Sources */,
 				922773F716F52AD400B52408 /* BRKLoginViewController.m in Sources */,
-				922773FC16F52F5400B52408 /* BRKSignupViewController.m in Sources */,
 				9227740616F531A400B52408 /* BRKParametresViewController.m in Sources */,
 				9227740A16F531E900B52408 /* BRKTabBarViewController.m in Sources */,
 				9227740E16F5355900B52408 /* BRKHomeViewController.m in Sources */,
@@ -267,6 +266,7 @@
 				924C59C916F69E16000488BF /* FMDatabasePool.m in Sources */,
 				924C59CA16F69E16000488BF /* FMDatabaseQueue.m in Sources */,
 				924C59CC16F69E16000488BF /* FMResultSet.m in Sources */,
+				92849C6F16FA911300E97233 /* BRKSignupViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -56,31 +56,35 @@
 - (IBAction)cancelCourseAction:(id)sender {
     BRKAppDelegate *appDelegate = (BRKAppDelegate *)[[UIApplication sharedApplication ] delegate];
     [appDelegate cancelCourse];
+    self.titleLabel.text = @"";
 }
 
 - (IBAction)busyAction:(id)sender {
     BRKAppDelegate *appDelegate = (BRKAppDelegate *)[[UIApplication sharedApplication ] delegate];
     [appDelegate makeBusy];
     [self.availableButton setEnabled:YES];
-    if([appDelegate getBusyStatus])
-    {
-        [sender setEnabled:NO];
-    }
+    [sender setEnabled:NO];
+    self.statusLabel.text = @"Vous avez opté pour ne plus reçevoir de course.";
     
 }
 
 - (IBAction)availableAction:(id)sender {
     BRKAppDelegate *appDelegate = (BRKAppDelegate *)[[UIApplication sharedApplication ] delegate];
     [appDelegate makeAvailable];
+    [sender setEnabled:NO];
     [self.busyButton setEnabled:YES];
+    self.statusLabel.text = @"Vous allez recevoir une notification dès qu'une course est disponible.";
+
     
 
 
 }
 - (void)viewDidUnload {
-    [self setDebugField:nil];
     [self setBusyButton:nil];
     [self setAvailableButton:nil];
+    [self setStatusLabel:nil];
+    [self setTitleLabel:nil];
+    [self setAddressLabel:nil];
     [super viewDidUnload];
 }
 
