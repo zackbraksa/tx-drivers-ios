@@ -253,7 +253,7 @@
         //s'il y a des reservations en attente
         if([[json objectForKey:@"status"] isEqualToString:@"done"]){
             
-            NSLog(@"There is a Pending Reservations");
+            NSLog(@"There is at least a pending reservation");
             NSArray* reservations = [json objectForKey:@"reservation"];
             
             for(int j = 0; j < [reservations count]; j++){
@@ -343,6 +343,9 @@
                     if([homeView respondsToSelector:@selector(addressLabel)]){
                         homeView.titleLabel.text = @"Adresse du client";
                         homeView.addressLabel.text =  [[NSString alloc] initWithFormat:@"%@",[s stringForColumn:@"depart"]];
+                        [homeView.busyButton setHidden:YES];
+                        [homeView.availableButton setHidden:YES];
+                        [homeView.cancelButton setHidden:NO];
                     }
                 }
             }
@@ -366,6 +369,14 @@
             [db executeUpdateWithFormat:@"UPDATE reservations SET status = 'ignored' WHERE id = (%d)", [[json objectForKey:@"id"] intValue]];
             [activityIndicator stopAnimating];
             busy = false;
+            if ([self.viewController respondsToSelector:@selector(selectedViewController)]) {
+                BRKHomeViewController* homeView = (BRKHomeViewController*)((UITabBarController*)self.viewController).selectedViewController;
+                if([homeView respondsToSelector:@selector(busyButton)]){
+                    [homeView.busyButton setHidden:NO];
+                    [homeView.availableButton setHidden:NO];
+                    [homeView.cancelButton setHidden:YES];
+                }
+            }
         }else{
             NSLog(@"Can't cancel reservation.");
         }

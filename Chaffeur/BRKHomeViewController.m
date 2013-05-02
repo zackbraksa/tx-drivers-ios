@@ -64,7 +64,7 @@
     [appDelegate makeBusy];
     [self.availableButton setEnabled:YES];
     [sender setEnabled:NO];
-    self.statusLabel.text = @"Vous avez opté pour ne plus reçevoir de course.";
+    self.statusLabel.text = @"Vous avez opté pour ne plus recevoir de course.";
     
 }
 
@@ -85,6 +85,7 @@
     [self setStatusLabel:nil];
     [self setTitleLabel:nil];
     [self setAddressLabel:nil];
+    [self setCancelButton:nil];
     [super viewDidUnload];
 }
 

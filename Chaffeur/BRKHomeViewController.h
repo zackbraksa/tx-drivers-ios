@@ -19,5 +19,6 @@
 @property (unsafe_unretained, nonatomic) IBOutlet UILabel *statusLabel;
 @property (unsafe_unretained, nonatomic) IBOutlet UILabel *titleLabel;
 @property (unsafe_unretained, nonatomic) IBOutlet UILabel *addressLabel;
+@property (unsafe_unretained, nonatomic) IBOutlet UIButton *cancelButton;
 
 @end
