@@ -27,12 +27,27 @@
         /* change tab item title */
         UITabBarItem* tbi = [self tabBarItem];
         [tbi setTitle:@"Tableau de bord"];
-        UIImage* i = [UIImage imageNamed:@"globe.png"];
+        UIImage* i = [UIImage imageNamed:@"house.png"];
         [tbi setImage:i];
     }
     return self;
 }
 
+
+- (void) viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:YES];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    if([defaults objectForKey:@"depart"]){
+        self.titleLabel.text = @"Adresse du client";
+        self.addressLabel.text =  [[NSString alloc] initWithFormat:@"%@",[defaults objectForKey:@"depart"]];
+        [self.busyButton setHidden:YES];
+        [self.availableButton setHidden:YES];
+        [self.cancelButton setHidden:NO];
+        self.statusLabel.text = @"";
+    }
+}
 
 - (void)viewDidLoad
 {
@@ -43,8 +58,10 @@
     }else{
         [self.availableButton setEnabled:NO];
     }
+    
+    
+    
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
 }
 
 - (void)didReceiveMemoryWarning

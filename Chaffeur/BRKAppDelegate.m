@@ -70,15 +70,11 @@
     NSString *user_id = [defaults objectForKey:@"user_id"];
     return user_id;
 }
-
-- (void)applicationWillResignActive:(UIApplication *)application
-{
+- (void)applicationWillResignActive:(UIApplication *)application{
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
 }
-
-- (void)applicationDidEnterBackground:(UIApplication *)application
-{
+- (void)applicationDidEnterBackground:(UIApplication *)application{
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     
@@ -88,27 +84,28 @@
     //[locationManager startUpdatingLocation];
 
 }
-
-- (void)applicationWillEnterForeground:(UIApplication *)application
-{
+- (void)applicationWillEnterForeground:(UIApplication *)application{
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    //Enter Foreground
     
     [locationManager stopMonitoringSignificantLocationChanges];
     [locationManager startUpdatingLocation];
     
+    
+    //we check if there is any pending reservations in the the internal database
     NSString* query = [[NSString alloc] initWithFormat:@"select count(id) from reservations WHERE status = 'accepted'"];
     NSUInteger count = [db intForQuery:query];
     
+    
+    //if there are any pending reservations we stop broadacasting 
     if(count != 0){
         busy = true;
     }
     
-    //if user is logged in + there pending notifications + busy.
+    //if the user is logged in and there is pending notifications then show all non-ignored reservations in the form of UIAlertViews
     if([self getUserId] && pendingNotifications != 0){
         
         //get non-ignored reservations. 
@@ -142,6 +139,7 @@
     NSUInteger count = [db intForQuery:@"SELECT count(id) FROM reservations WHERE status = 'accepted'"];
     
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    
     if([title isEqualToString:@"Accepter"] && count == 0)
     {
         self.receivedData = [[NSMutableData alloc] init];
@@ -161,10 +159,16 @@
         [self.window addSubview:activityIndicator];
         [activityIndicator startAnimating];
         
+        NSLog(@"Driver accepts reservation");
+        
     }
-    else if([title isEqualToString:@"Ignorer"])
-    {        
-        [db executeUpdateWithFormat:@"UPDATE reservations SET status = 'ignored' WHERE id = (%d)", [reservation_id intValue]];
+    else if([title isEqualToString:@"Ignorer"] || [title isEqualToString:@"Continuer"])
+    {
+        NSLog(@"Reservation %d Ignored ", [reservation_id intValue]);
+        if(![title isEqualToString:@"Continuer"]){
+            [db executeUpdateWithFormat:@"UPDATE reservations SET status = 'ignored' WHERE id = (%d)", [reservation_id intValue]];
+        }
+        
         //fetch reservations restantes
         FMResultSet *s = [db executeQuery:@"select * from reservations WHERE status != 'ignored'"]; [self dbLogErrors];
         
@@ -186,16 +190,16 @@
             busy = false;
             NSLog(@"No more AlertViews to show. ");
         }
-    }else if([title isEqualToString:@"Continuer"]){
-        //afficher le reste des AlertViews.
+    }else{
+        busy = false;
     }
     
 }
 
-- (void)applicationWillTerminate:(UIApplication *)application
-{
+- (void)applicationWillTerminate:(UIApplication *)application{
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
+
 -(void) locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
 
@@ -329,7 +333,7 @@
     else if([[json objectForKey:@"action"] isEqualToString:@"confirmationReservation"]){
         if([[json objectForKey:@"status"] isEqualToString:@"accepted"]){
             
-            NSLog(@"Reservation request was accepted by server.");
+            NSLog(@"Reservation %d request was accepted by server", [[json objectForKey:@"id"] intValue]);
             
             [db executeUpdateWithFormat:@"UPDATE reservations SET status = 'accepted' WHERE id = (%d)", [[json objectForKey:@"id"] intValue]];
             [self dbLogErrors];
@@ -346,6 +350,10 @@
                         [homeView.busyButton setHidden:YES];
                         [homeView.availableButton setHidden:YES];
                         [homeView.cancelButton setHidden:NO];
+                        homeView.statusLabel.text = @"";
+                    }else{
+                        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                        [defaults setObject:[[NSString alloc] initWithFormat:@"%@",[s stringForColumn:@"depart"]] forKey:@"depart"];
                     }
                 }
             }
@@ -354,7 +362,15 @@
             pendingNotifications = 0; //no pending notifications to show anymore.
 
         }else{
-            //afficher AlertView d'erreur + Bouton Continuer
+
+            NSLog(@"Reservation not accepted");
+            NSLog(@"Canceling Reservation %d", [[json objectForKey:@"id"] intValue]);
+            
+            
+            [db executeUpdateWithFormat:@"UPDATE reservations SET status = 'ignored' WHERE id = (%d)", [[json objectForKey:@"id"] intValue]];
+            [self dbLogErrors];
+            
+            
             NSLog(@"Request refused");
             [activityIndicator stopAnimating];
             UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Requete refusée."
@@ -364,6 +380,7 @@
                                                     otherButtonTitles:@"Ignorer", nil];
             [message show];
         }
+        
     }else if([[json objectForKey:@"action"] isEqualToString:@"cancelReservation"]){
         if([[json objectForKey:@"status"] isEqualToString:@"done"]){
             [db executeUpdateWithFormat:@"UPDATE reservations SET status = 'ignored' WHERE id = (%d)", [[json objectForKey:@"id"] intValue]];
@@ -375,6 +392,7 @@
                     [homeView.busyButton setHidden:NO];
                     [homeView.availableButton setHidden:NO];
                     [homeView.cancelButton setHidden:YES];
+                    homeView.statusLabel.text = @"Vous allez recevoir une notification dès qu'une course est disponible.";
                 }
             }
         }else{

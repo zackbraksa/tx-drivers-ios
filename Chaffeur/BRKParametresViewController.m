@@ -27,7 +27,7 @@
         
         UITabBarItem* tbi = [self tabBarItem];
         [tbi setTitle:@"Paramétres"];
-        UIImage* i = [UIImage imageNamed:@"globe.png"];
+        UIImage* i = [UIImage imageNamed:@"cog_02.png"];
         [tbi setImage:i];
         
     }
