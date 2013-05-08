@@ -50,12 +50,15 @@
     [super viewDidUnload];
 }
 - (IBAction)deconnexionPressed:(id)sender {
+    
     BRKAppDelegate *appDelegate = (BRKAppDelegate *)[[UIApplication sharedApplication ] delegate];
     [appDelegate makeBusy];
     
+    //delete all records in sqlite db
     NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
     [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
     
+    //switch to login view
     BRKLoginViewController *loginView = [[BRKLoginViewController alloc] initWithNibName:@"BRKLoginViewController" bundle:nil];
     UIViewController *loginNavigationControllerView = [[UINavigationController alloc] initWithRootViewController:loginView];
     
@@ -63,6 +66,10 @@
     
     UIWindow *window = [[UIApplication sharedApplication] keyWindow];
     window.rootViewController = loginNavigationControllerView;
+}
+
+- (IBAction)doneAction:(id)sender {
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 @end

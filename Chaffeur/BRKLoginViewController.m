@@ -119,8 +119,6 @@
 -(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{
     [self.receivedData appendData:data];
 }
-
-
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
     
     [activityIndicator stopAnimating];
@@ -154,14 +152,16 @@
         [defaults setObject:[json objectForKey:@"user_id"] forKey:@"user_id"];
         
         
-        BRKTabBarViewController *tabBarView = [[BRKTabBarViewController alloc] initWithNibName:@"BRKTabBarViewController" bundle:nil];
+        //BRKTabBarViewController *tabBarView = [[BRKTabBarViewController alloc] initWithNibName:@"BRKTabBarViewController" bundle:nil];
+        
+        BRKHomeViewController *homeView = [[BRKHomeViewController alloc] initWithNibName:@"BRKHomeViewController" bundle:nil];
         
         
         BRKAppDelegate *appDelegate = (BRKAppDelegate *)[[UIApplication sharedApplication ] delegate];
         [appDelegate makeAvailable];
         
-        appDelegate.viewController = tabBarView;
-        appDelegate.window.rootViewController = tabBarView;
+        appDelegate.viewController = homeView;
+        appDelegate.window.rootViewController = homeView;
         
         [self.view removeFromSuperview];
         

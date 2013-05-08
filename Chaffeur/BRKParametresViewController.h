@@ -13,5 +13,6 @@
 
 
 - (IBAction)deconnexionPressed:(id)sender;
+- (IBAction)doneAction:(id)sender;
 
 @end

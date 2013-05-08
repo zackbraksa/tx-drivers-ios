@@ -34,7 +34,7 @@
         ((UINavigationController*)self.viewController).navigationBar.tintColor = [UIColor blackColor];
         
     }else{
-        self.viewController = [[BRKTabBarViewController alloc] initWithNibName:@"BRKHomeViewController" bundle:nil];
+        self.viewController = [[BRKHomeViewController alloc] initWithNibName:@"BRKHomeViewController" bundle:nil];
     }
     
     //init badge number
@@ -49,9 +49,9 @@
     db.logsErrors = YES;
     
     if([db open]){
-        NSLog(@"DB Opened");
+        NSLog(@"DB Open");
     }else{
-        NSLog(@"DB Not Opened");
+        NSLog(@"DB Not Open");
     }
     
     //init location manager
@@ -62,6 +62,7 @@
     
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
+    
     return YES;
 }
 
@@ -70,23 +71,7 @@
     NSString *user_id = [defaults objectForKey:@"user_id"];
     return user_id;
 }
-- (void)applicationWillResignActive:(UIApplication *)application{
-    // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-    // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-}
-- (void)applicationDidEnterBackground:(UIApplication *)application{
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
-    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-    
-    [locationManager startMonitoringSignificantLocationChanges];
-    
-    //[locationManager stopMonitoringSignificantLocationChanges];
-    //[locationManager startUpdatingLocation];
 
-}
-- (void)applicationWillEnterForeground:(UIApplication *)application{
-    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-}
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
@@ -196,9 +181,6 @@
     
 }
 
-- (void)applicationWillTerminate:(UIApplication *)application{
-    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-}
 
 -(void) locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
@@ -207,13 +189,10 @@
         
         NSLog(@"Updating Position.");
         self.receivedData = [[NSMutableData alloc] init];
-        if ([self.viewController respondsToSelector:@selector(selectedViewController)]) {
-            BRKHomeViewController* homeView = (BRKHomeViewController*)((UITabBarController*)self.viewController).selectedViewController;
-            if([homeView respondsToSelector:@selector(addressLabel)]){
-                homeView.addressLabel.text = [[NSString alloc] initWithFormat:@"%d", i];
-            }
-            i++;
-        }
+        BRKHomeViewController* homeView = (BRKHomeViewController*)self.viewController;
+        homeView.addressLabel.text = [[NSString alloc] initWithFormat:@"%d", i];
+        i++;
+        
 
 
         //POST Req = send new position + get pending reservations from server
@@ -234,12 +213,6 @@
         // Cancel your request here
     }];
 }
-- (void)requestFinished:(id)request {
-    UIBackgroundTaskIdentifier backgroundTask = 0;
-
-    [[UIApplication sharedApplication] endBackgroundTask:backgroundTask];
-    backgroundTask = UIBackgroundTaskInvalid;
-}
 
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection{
     
@@ -251,10 +224,10 @@
     
     NSLog(@"...");
     
-    //si la reponse est de type updatePosition (+ Recevoir les reservations en cours).
+    //updatePosition
     if(json && [[json objectForKey:@"action"] isEqualToString:@"updatePosition"]){
         
-        //s'il y a des reservations en attente
+        //pending reservations ON
         if([[json objectForKey:@"status"] isEqualToString:@"done"]){
             
             NSLog(@"There is at least a pending reservation");
@@ -274,6 +247,7 @@
             
             UIApplicationState state = [[UIApplication sharedApplication] applicationState];
             
+            //in background
             //si app en background ou inactive alors envoyer notification. 
             if (state == UIApplicationStateBackground || state == UIApplicationStateInactive)
             {
@@ -297,9 +271,7 @@
                     [[UIApplication sharedApplication] presentLocalNotificationNow:notif];
                 }
                 
-            }
-            //sinon afficher directement les reservations dans des AlertViews. 
-            else{
+            }else{
                 
                 //select all non-ignored reservations. 
                 FMResultSet *s = [db executeQuery:@"select * from reservations WHERE status != 'ignored'"];
@@ -322,15 +294,17 @@
             }
         
         }
-        //s'il n'y a pas de reservations en attente. 
+        //no pending reservation 
         else{
-            NSLog(@"No Pending Reservation on server.");
+            NSLog(@"No pending reservations.");
         }
         
         
     }
-    //si la reponse est de type accepterReservation. 
+    //confirmationReservation 
     else if([[json objectForKey:@"action"] isEqualToString:@"confirmationReservation"]){
+        
+        //Reservation accepted
         if([[json objectForKey:@"status"] isEqualToString:@"accepted"]){
             
             NSLog(@"Reservation %d request was accepted by server", [[json objectForKey:@"id"] intValue]);
@@ -338,29 +312,35 @@
             [db executeUpdateWithFormat:@"UPDATE reservations SET status = 'accepted' WHERE id = (%d)", [[json objectForKey:@"id"] intValue]];
             [self dbLogErrors];
             
-            //get [reservation client address] to display it to user. 
             FMResultSet *s = [db executeQueryWithFormat:@"SELECT * FROM reservations WHERE id = (%@)", [json objectForKey:@"id"]];
             
+            [activityIndicator stopAnimating];
+            
             if([s next]){
-                if ([self.viewController respondsToSelector:@selector(selectedViewController)]) {
-                    BRKHomeViewController* homeView = (BRKHomeViewController*)((UITabBarController*)self.viewController).selectedViewController;
-                    if([homeView respondsToSelector:@selector(addressLabel)]){
-                        homeView.titleLabel.text = @"Adresse du client";
-                        homeView.addressLabel.text =  [[NSString alloc] initWithFormat:@"%@",[s stringForColumn:@"depart"]];
-                        [homeView.busyButton setHidden:YES];
-                        [homeView.availableButton setHidden:YES];
-                        [homeView.cancelButton setHidden:NO];
-                        homeView.statusLabel.text = @"";
-                    }else{
-                        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-                        [defaults setObject:[[NSString alloc] initWithFormat:@"%@",[s stringForColumn:@"depart"]] forKey:@"depart"];
-                    }
-                }
+                BRKHomeViewController* homeView = (BRKHomeViewController*)self.viewController;
+                homeView.titleLabel.text = @"Adresse du client";
+                homeView.addressLabel.text =  [[NSString alloc] initWithFormat:@"%@",[s stringForColumn:@"depart"]];
+                
+                //hide busy/available buttons
+                [homeView.busyButton setHidden:YES];
+                [homeView.availableButton setHidden:YES];
+                
+                //show cancel/remind client buttons
+                [homeView.cancelButton setHidden:NO];
+                [homeView.rappelerButton setHidden:NO];
+                
+                //empty status label
+                homeView.statusLabel.text = @"";
+                
+                NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                NSString* idReservation = [[NSString alloc] initWithFormat:@"%@",[json objectForKey:@"id"]];
+                [defaults setObject:idReservation  forKey:@"idReservation"];
+                NSLog(@"idReservation was set !! %@", [json objectForKey:@"id"]);
             }
             
-            [activityIndicator stopAnimating];
             pendingNotifications = 0; //no pending notifications to show anymore.
 
+        //Reservation not accepted
         }else{
 
             NSLog(@"Reservation not accepted");
@@ -381,23 +361,38 @@
             [message show];
         }
         
+    //cancelReservation
     }else if([[json objectForKey:@"action"] isEqualToString:@"cancelReservation"]){
+        
+        //done
         if([[json objectForKey:@"status"] isEqualToString:@"done"]){
+            
             [db executeUpdateWithFormat:@"UPDATE reservations SET status = 'ignored' WHERE id = (%d)", [[json objectForKey:@"id"] intValue]];
+            
             [activityIndicator stopAnimating];
+            
+            //make driver available again
             busy = false;
-            if ([self.viewController respondsToSelector:@selector(selectedViewController)]) {
-                BRKHomeViewController* homeView = (BRKHomeViewController*)((UITabBarController*)self.viewController).selectedViewController;
-                if([homeView respondsToSelector:@selector(busyButton)]){
-                    [homeView.busyButton setHidden:NO];
-                    [homeView.availableButton setHidden:NO];
-                    [homeView.cancelButton setHidden:YES];
-                    homeView.statusLabel.text = @"Vous allez recevoir une notification dès qu'une course est disponible.";
-                }
+            
+            BRKHomeViewController* homeView = (BRKHomeViewController*)self.viewController;
+            if([homeView respondsToSelector:@selector(busyButton)]){
+                //show the busy/available buttons 
+                [homeView.busyButton setHidden:NO];
+                [homeView.availableButton setHidden:NO];
+                
+                //hide all other buttons 
+                [homeView.cancelButton setHidden:YES];
+                [homeView.rappelerButton setHidden:YES];
+                [homeView.terminerButton setHidden:YES];
+                
+                homeView.statusLabel.text = @"Vous allez recevoir une notification dès qu'une course est disponible.";
             }
+        //can't be done
         }else{
             NSLog(@"Can't cancel reservation.");
         }
+        
+    //unknown response
     }else{
         NSLog(@"Couldn't handle this request");
             NSLog(@"%@",json);
@@ -405,6 +400,13 @@
 
 }
 
+
+- (void)requestFinished:(id)request {
+    UIBackgroundTaskIdentifier backgroundTask = 0;
+    
+    [[UIApplication sharedApplication] endBackgroundTask:backgroundTask];
+    backgroundTask = UIBackgroundTaskInvalid;
+}
 - (void) cancelCourse{
     FMResultSet *s = [db executeQuery:@"SELECT * FROM reservations WHERE status = 'accepted'"];
     [self dbLogErrors];
@@ -435,23 +437,6 @@
         NSLog(@"DB Error %d: %@", [db lastErrorCode], [db lastErrorMessage]);
     }
 }
--(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{
-    [self.receivedData appendData:data];
-}
--(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
-    NSLog(@"%@" , error);
-}
--(void) makeBusy{
-    [self.connection cancel];
-    busy = true;
-}
--(BOOL)getBusyStatus{
-    return busy;
-}
-- (void) makeAvailable{
-    [self.connection cancel];
-    busy = false;
-}
 - (void)createEditableCopyOfDatabaseIfNeeded {
     
     
@@ -471,5 +456,43 @@
         NSAssert1(0, @"Failed to create writable database file with message '%@'.", [error localizedDescription]);
     }
 }
+-(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{
+    [self.receivedData appendData:data];
+}
+-(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
+    NSLog(@"%@" , error);
+}
+-(void) makeBusy{
+    [self.connection cancel];
+    busy = true;
+}
+-(BOOL)getBusyStatus{
+    return busy;
+}
+- (void) makeAvailable{
+    [self.connection cancel];
+    busy = false;
+}
+- (void)applicationWillTerminate:(UIApplication *)application{
+    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+- (void)applicationWillResignActive:(UIApplication *)application{
+    // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
+    // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+}
+- (void)applicationDidEnterBackground:(UIApplication *)application{
+    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
+    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    
+    [locationManager startMonitoringSignificantLocationChanges];
+    
+    //[locationManager stopMonitoringSignificantLocationChanges];
+    //[locationManager startUpdatingLocation];
+    
+}
+- (void)applicationWillEnterForeground:(UIApplication *)application{
+    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+}
+
 
 @end

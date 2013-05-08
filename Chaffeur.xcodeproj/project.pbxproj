@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9204FB761739EAAB00F3F20B /* settings01.png in Resources */ = {isa = PBXBuildFile; fileRef = 9204FB751739EAAB00F3F20B /* settings01.png */; };
+		9204FB791739F06800F3F20B /* arrow-down3.png in Resources */ = {isa = PBXBuildFile; fileRef = 9204FB771739F06800F3F20B /* arrow-down3.png */; };
+		9204FB7A1739F06800F3F20B /* cog2.png in Resources */ = {isa = PBXBuildFile; fileRef = 9204FB781739F06800F3F20B /* cog2.png */; };
 		922773F716F52AD400B52408 /* BRKLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 922773F516F52AD400B52408 /* BRKLoginViewController.m */; };
 		922773F816F52AD400B52408 /* BRKLoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 922773F616F52AD400B52408 /* BRKLoginViewController.xib */; };
 		9227740616F531A400B52408 /* BRKParametresViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9227740416F531A300B52408 /* BRKParametresViewController.m */; };
@@ -41,6 +44,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9204FB751739EAAB00F3F20B /* settings01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings01.png; sourceTree = "<group>"; };
+		9204FB771739F06800F3F20B /* arrow-down3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow-down3.png"; sourceTree = "<group>"; };
+		9204FB781739F06800F3F20B /* cog2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cog2.png; sourceTree = "<group>"; };
 		922773F416F52AD400B52408 /* BRKLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRKLoginViewController.h; sourceTree = "<group>"; };
 		922773F516F52AD400B52408 /* BRKLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRKLoginViewController.m; sourceTree = "<group>"; };
 		922773F616F52AD400B52408 /* BRKLoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BRKLoginViewController.xib; sourceTree = "<group>"; };
@@ -139,6 +145,7 @@
 		92789D8C16ED2D1100F069CD /* Chaffeur */ = {
 			isa = PBXGroup;
 			children = (
+				9204FB751739EAAB00F3F20B /* settings01.png */,
 				92A0D3A817345143005211B3 /* cog_02@2x.png */,
 				92A0D3A917345143005211B3 /* house@2x.png */,
 				928A582816EFC6CE00484F44 /* greenButton.png */,
@@ -169,6 +176,8 @@
 				924C59C316F69E16000488BF /* FMDatabaseQueue.m */,
 				924C59C516F69E16000488BF /* FMResultSet.h */,
 				924C59C616F69E16000488BF /* FMResultSet.m */,
+				9204FB771739F06800F3F20B /* arrow-down3.png */,
+				9204FB781739F06800F3F20B /* cog2.png */,
 				92789D8D16ED2D1100F069CD /* Supporting Files */,
 			);
 			path = Chaffeur;
@@ -253,6 +262,9 @@
 				92849C7016FA911300E97233 /* BRKSignupViewController.xib in Resources */,
 				92A0D3AA17345143005211B3 /* cog_02@2x.png in Resources */,
 				92A0D3AB17345143005211B3 /* house@2x.png in Resources */,
+				9204FB761739EAAB00F3F20B /* settings01.png in Resources */,
+				9204FB791739F06800F3F20B /* arrow-down3.png in Resources */,
+				9204FB7A1739F06800F3F20B /* cog2.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
