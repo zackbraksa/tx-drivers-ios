@@ -57,13 +57,11 @@
     BRKAppDelegate *appDelegate = (BRKAppDelegate *)[[UIApplication sharedApplication ] delegate];
     BOOL busy = [appDelegate getBusyStatus];
     if(busy){
-        [self.busyButton setEnabled:NO];
+        //[self.busyButton setEnabled:NO];
     }else{
-        [self.availableButton setEnabled:NO];
+        //[self.availableButton setEnabled:NO];
     }
-    
-    
-    
+
     [super viewDidLoad];
 }
 
@@ -82,22 +80,20 @@
 - (IBAction)busyAction:(id)sender {
     BRKAppDelegate *appDelegate = (BRKAppDelegate *)[[UIApplication sharedApplication ] delegate];
     [appDelegate makeBusy];
-    [self.availableButton setEnabled:YES];
-    [sender setEnabled:NO];
-    self.statusLabel.text = @"Vous avez opté pour ne plus recevoir de course.";
+    //[self.availableButton setEnabled:YES];
+    //[sender setEnabled:NO];
+    //self.statusLabel.text = @"Vous avez opté pour ne plus recevoir de course.";
+    self.addressLabel.text = @"En Pause";
     
 }
 
 - (IBAction)availableAction:(id)sender {
     BRKAppDelegate *appDelegate = (BRKAppDelegate *)[[UIApplication sharedApplication ] delegate];
     [appDelegate makeAvailable];
-    [sender setEnabled:NO];
-    [self.busyButton setEnabled:YES];
-    self.statusLabel.text = @"Vous allez recevoir une notification dès qu'une course est disponible.";
-
-    
-
-
+    //[sender setEnabled:NO];
+    //[self.busyButton setEnabled:YES];
+    //self.statusLabel.text = @"Vous allez recevoir une notification dès qu'une course est disponible.";
+    self.addressLabel.text = @"En Ligne";
 }
 
 - (IBAction)bringConfiguration:(id)sender {
@@ -180,10 +176,20 @@
         
     }else if([[json objectForKey:@"action"] isEqualToString:@"terminer"]){
         if([[json objectForKey:@"status"] isEqualToString:@"done"]){
+            //make busy/available buttons not hidden
             [self.availableButton setHidden:NO];
             [self.busyButton setHidden:NO];
+            
             [self.terminerButton setHidden:YES];
-            self.statusLabel.text = @"Vous allez recevoir une notification dès qu'une course est disponible.";
+            [self.cancelButton setHidden:YES];
+            
+            //start re-broadcasting driver position again
+            BRKAppDelegate *appDelegate = (BRKAppDelegate *)[[UIApplication sharedApplication ] delegate];
+            [appDelegate makeAvailable];
+            
+            self.titleLabel.text = @"";
+            self.addressLabel.text = @"En Ligne";
+            //self.statusLabel.text = @"Vous allez recevoir une notification dès qu'une course est disponible.";
             
         }else{
             NSLog(@"Terminer wasn't sent");

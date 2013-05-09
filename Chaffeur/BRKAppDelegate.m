@@ -375,20 +375,20 @@
             busy = false;
             
             BRKHomeViewController* homeView = (BRKHomeViewController*)self.viewController;
-            if([homeView respondsToSelector:@selector(busyButton)]){
-                //show the busy/available buttons 
-                [homeView.busyButton setHidden:NO];
-                [homeView.availableButton setHidden:NO];
+            //show the busy/available buttons 
+            [homeView.busyButton setHidden:NO];
+            [homeView.availableButton setHidden:NO];
                 
                 //hide all other buttons 
-                [homeView.cancelButton setHidden:YES];
-                [homeView.rappelerButton setHidden:YES];
-                [homeView.terminerButton setHidden:YES];
+            [homeView.cancelButton setHidden:YES];
+            [homeView.rappelerButton setHidden:YES];
+            [homeView.terminerButton setHidden:YES];
                 
-                homeView.statusLabel.text = @"Vous allez recevoir une notification dès qu'une course est disponible.";
-            }
-        //can't be done
+            //homeView.statusLabel.text = @"Vous allez recevoir une notification dès qu'une course est disponible.";
+            homeView.addressLabel.text = @"En Ligne";
+            
         }else{
+            //can't be done
             NSLog(@"Can't cancel reservation.");
         }
         
@@ -407,7 +407,9 @@
     [[UIApplication sharedApplication] endBackgroundTask:backgroundTask];
     backgroundTask = UIBackgroundTaskInvalid;
 }
+
 - (void) cancelCourse{
+    
     FMResultSet *s = [db executeQuery:@"SELECT * FROM reservations WHERE status = 'accepted'"];
     [self dbLogErrors];
     
@@ -459,20 +461,27 @@
 -(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{
     [self.receivedData appendData:data];
 }
+
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
     NSLog(@"%@" , error);
 }
+
 -(void) makeBusy{
     [self.connection cancel];
     busy = true;
 }
+
 -(BOOL)getBusyStatus{
     return busy;
 }
+
 - (void) makeAvailable{
+    [db executeUpdate:@"UPDATE reservations SET status = 'ignored' WHERE status = 'accepted'"];
     [self.connection cancel];
     busy = false;
+    NSLog(@"Making Driver Available");
 }
+
 - (void)applicationWillTerminate:(UIApplication *)application{
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
