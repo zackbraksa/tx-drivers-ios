@@ -40,6 +40,8 @@
 		928A582B16EFC6CE00484F44 /* orangeButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 928A582916EFC6CE00484F44 /* orangeButton.png */; };
 		92A0D3AA17345143005211B3 /* cog_02@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92A0D3A817345143005211B3 /* cog_02@2x.png */; };
 		92A0D3AB17345143005211B3 /* house@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92A0D3A917345143005211B3 /* house@2x.png */; };
+		92A7AB99174033B7002F244A /* BRKHistoriqueViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A7AB97174033B7002F244A /* BRKHistoriqueViewController.m */; };
+		92A7AB9A174033B7002F244A /* BRKHistoriqueViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 92A7AB98174033B7002F244A /* BRKHistoriqueViewController.xib */; };
 		92C2BF8516F959E0008F3754 /* db.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 92C2BF8416F959E0008F3754 /* db.sqlite */; };
 /* End PBXBuildFile section */
 
@@ -91,6 +93,9 @@
 		928A582916EFC6CE00484F44 /* orangeButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = orangeButton.png; sourceTree = "<group>"; };
 		92A0D3A817345143005211B3 /* cog_02@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cog_02@2x.png"; sourceTree = "<group>"; };
 		92A0D3A917345143005211B3 /* house@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "house@2x.png"; sourceTree = "<group>"; };
+		92A7AB96174033B7002F244A /* BRKHistoriqueViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRKHistoriqueViewController.h; sourceTree = "<group>"; };
+		92A7AB97174033B7002F244A /* BRKHistoriqueViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRKHistoriqueViewController.m; sourceTree = "<group>"; };
+		92A7AB98174033B7002F244A /* BRKHistoriqueViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BRKHistoriqueViewController.xib; sourceTree = "<group>"; };
 		92C2BF8416F959E0008F3754 /* db.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = db.sqlite; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -166,6 +171,9 @@
 				9227740316F531A300B52408 /* BRKParametresViewController.h */,
 				9227740416F531A300B52408 /* BRKParametresViewController.m */,
 				9227740516F531A300B52408 /* BRKParametresViewController.xib */,
+				92A7AB96174033B7002F244A /* BRKHistoriqueViewController.h */,
+				92A7AB97174033B7002F244A /* BRKHistoriqueViewController.m */,
+				92A7AB98174033B7002F244A /* BRKHistoriqueViewController.xib */,
 				924C59BC16F69E15000488BF /* FMDatabase.h */,
 				924C59BD16F69E15000488BF /* FMDatabase.m */,
 				924C59BE16F69E15000488BF /* FMDatabaseAdditions.h */,
@@ -265,6 +273,7 @@
 				9204FB761739EAAB00F3F20B /* settings01.png in Resources */,
 				9204FB791739F06800F3F20B /* arrow-down3.png in Resources */,
 				9204FB7A1739F06800F3F20B /* cog2.png in Resources */,
+				92A7AB9A174033B7002F244A /* BRKHistoriqueViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -287,6 +296,7 @@
 				924C59CA16F69E16000488BF /* FMDatabaseQueue.m in Sources */,
 				924C59CC16F69E16000488BF /* FMResultSet.m in Sources */,
 				92849C6F16FA911300E97233 /* BRKSignupViewController.m in Sources */,
+				92A7AB99174033B7002F244A /* BRKHistoriqueViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

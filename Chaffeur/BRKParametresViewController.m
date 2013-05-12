@@ -9,6 +9,7 @@
 #import "BRKParametresViewController.h"
 #import "BRKLoginViewController.h"
 #import "BRKAppDelegate.h"
+#import "BRKHistoriqueViewController.h"
 
 @interface BRKParametresViewController ()
 
@@ -49,6 +50,12 @@
 - (void)viewDidUnload {
     [super viewDidUnload];
 }
+
+- (IBAction)showHistoriqueView:(id)sender {
+    BRKHistoriqueViewController* historiqueView = [[BRKHistoriqueViewController alloc] initWithNibName:@"BRKHistoriqueViewController" bundle:nil];
+    [self presentViewController:historiqueView animated:YES completion:nil];
+}
+
 - (IBAction)deconnexionPressed:(id)sender {
     
     BRKAppDelegate *appDelegate = (BRKAppDelegate *)[[UIApplication sharedApplication ] delegate];

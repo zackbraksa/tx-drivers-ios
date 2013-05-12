@@ -11,6 +11,7 @@
 @interface BRKParametresViewController : UIViewController
 
 
+- (IBAction)showHistoriqueView:(id)sender;
 
 - (IBAction)deconnexionPressed:(id)sender;
 - (IBAction)doneAction:(id)sender;
