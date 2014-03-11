@@ -208,9 +208,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		92789D8116ED2D1100F069CD /* Chauffeur */ = {
+		92789D8116ED2D1100F069CD /* driver */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 92789DA616ED2D1100F069CD /* Build configuration list for PBXNativeTarget "Chauffeur" */;
+			buildConfigurationList = 92789DA616ED2D1100F069CD /* Build configuration list for PBXNativeTarget "driver" */;
 			buildPhases = (
 				92789D7E16ED2D1100F069CD /* Sources */,
 				92789D7F16ED2D1100F069CD /* Frameworks */,
@@ -220,7 +220,7 @@
 			);
 			dependencies = (
 			);
-			name = Chauffeur;
+			name = driver;
 			productName = Chaffeur;
 			productReference = 92789D8216ED2D1100F069CD /* Chauffeur.app */;
 			productType = "com.apple.product-type.application";
@@ -235,7 +235,7 @@
 				LastUpgradeCheck = 0450;
 				ORGANIZATIONNAME = Zakaria;
 			};
-			buildConfigurationList = 92789D7C16ED2D1100F069CD /* Build configuration list for PBXProject "Chaffeur" */;
+			buildConfigurationList = 92789D7C16ED2D1100F069CD /* Build configuration list for PBXProject "driver" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -247,7 +247,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				92789D8116ED2D1100F069CD /* Chauffeur */,
+				92789D8116ED2D1100F069CD /* driver */,
 			);
 		};
 /* End PBXProject section */
@@ -434,7 +434,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		92789D7C16ED2D1100F069CD /* Build configuration list for PBXProject "Chaffeur" */ = {
+		92789D7C16ED2D1100F069CD /* Build configuration list for PBXProject "driver" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				92789DA416ED2D1100F069CD /* Debug */,
@@ -444,7 +444,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		92789DA616ED2D1100F069CD /* Build configuration list for PBXNativeTarget "Chauffeur" */ = {
+		92789DA616ED2D1100F069CD /* Build configuration list for PBXNativeTarget "driver" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				92789DA716ED2D1100F069CD /* Debug */,
